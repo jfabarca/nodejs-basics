@@ -10,9 +10,9 @@ const port = config.port;
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
-storage.connect(() => {
+storage.connect((db) => {
   // Load API routes
-  require('./app/routes/')(app, storage);
+  require('./app/routes/')(app, db);
   // Start server
   app.listen(port, () => {
     console.log('Listening on port ' + port);

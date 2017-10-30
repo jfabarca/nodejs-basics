@@ -3,19 +3,23 @@
   "version": "1.0.0",
   "description": "A basic NodeJS application example",
   "main": "server.js",
+  "author": "jfabarca",
+  "license": "MIT",
+  "homepage": "https://github.com/jfabarca/nodejs-basics#readme",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jfabarca/nodejs-basics.git"
   },
-  "author": "jfabarca",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jfabarca/nodejs-basics/issues"
   },
-  "homepage": "https://github.com/jfabarca/nodejs-basics#readme",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
