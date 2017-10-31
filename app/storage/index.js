@@ -5,9 +5,10 @@ const demoStorage = require('./demo_module/demo_storage.js');
 var database;
 var storage = {};
 
-module.exports.connect = function(cb) {
+module.exports.connect = (cb) => {
+  var url = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
-  MongoClient.connect('mongodb://localhost:27017/demo', (err, db) => {
+  MongoClient.connect(url, (err, db) => {
     if(err) {
       return console.log('Error: ' + err);
     }

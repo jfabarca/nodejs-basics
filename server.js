@@ -1,10 +1,15 @@
+var env = `${ process.env.NODE_ENV || 'dev' }.env`;
+require('dotenv').config({
+  path: `./config/${ env }`
+});
+console.log(`Loaded ${env}`);
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const storage = require('./app/storage/');
-const config = require('./config/config');
 
 const app = express();
-const port = config.port;
+const port = process.env.PORT;
 
 // Parse JSON body and store result in req.body
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,6 +20,6 @@ storage.connect((db) => {
   require('./app/routes/')(app, db);
   // Start server
   app.listen(port, () => {
-    console.log('Listening on port ' + port);
+    console.log(`Listening on port ${port}.`);
   });
 });
