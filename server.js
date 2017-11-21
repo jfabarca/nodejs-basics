@@ -1,11 +1,14 @@
+// Setup logger
+const logger = require('./app/logger/');
+logger.info('Starting NodeJS App.');
+
+// Load application properties
 var env = `${ process.env.NODE_ENV || 'dev' }.env`;
 require('dotenv').config({
   path: `./config/${ env }`
 });
 
-const logger = require('./app/logger/');
-logger.debug('Hello world');
-logger.info('INFO Hello world');
+logger.info(`Using ${env} properties.`);
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -17,13 +20,12 @@ const port = process.env.PORT;
 // Parse JSON body and store result in req.body
 app.use(bodyParser.urlencoded({ extended: true }));
 
-console.log(`Loaded ${env}`);
 // Connect to MongoDB
 storage.connect((db) => {
   // Load API routes
   require('./app/routes/')(app, db);
   // Start server
   app.listen(port, () => {
-    console.log(`Listening on port ${port}.`);
+    logger.info(`Listening on port ${port}.`);
   });
 });
