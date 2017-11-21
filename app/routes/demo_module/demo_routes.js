@@ -1,7 +1,7 @@
 module.exports = function(app, db) {
 
   app.get('/', (req, res) => {
-    var list = db.list();
+    // var list = db.list();
     res.send('GET /');
   });
 
