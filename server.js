@@ -1,14 +1,12 @@
-// Load application properties
-var env = `${ process.env.NODE_ENV || 'dev' }.env`;
-require('dotenv').config({
-  path: `./config/${ env }`
-});
+if(process.env.NODE_ENV !== 'production') {
+  // Setup environment variables for local development
+  require('dotenv').config();
+}
 
 // Setup logger
-const logger = require('./app/logger/');
+const logger = require('./app/logger');
 
-logger.info('Starting NodeJS App.');
-logger.info(`Using ${env} properties.`);
+logger.info('Starting NodeJS App...');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -21,9 +19,10 @@ const port = process.env.PORT;
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to database, then load API routes
-require('./app/routes/')(app, () => {
+require('./app/')(app, () => {
   // Start server
   app.listen(port, () => {
     logger.info(`Listening on port ${port}.`);
+    logger.info(`***  NodeJS App is up and running! ***`);
   });
 });

@@ -1,15 +1,18 @@
 const logger = require('winston');
 const MongoClient = require('mongodb').MongoClient;
 
-var database;
+let host = process.env.DB_HOST;
+let port = process.env.DB_PORT;
+let dbName = process.env.DB_NAME;
+
+let database;
 
 module.exports.connect = (cb) => {
-  var url = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+  var url = `mongodb://${host}:${port}/${dbName}`;
 
   MongoClient.connect(url, (err, db) => {
-    if(err) {
-      return logger.error('Error: ' + err);
-    }
+
+    if(err) return logger.error(`Database connection error: ${err}`);
 
     database = db;
     logger.info('Connected to database.');
