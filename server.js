@@ -10,16 +10,22 @@ if(process.env.NODE_ENV !== 'production') {
 let logDirectory = path.basename(process.env.LOGGER_DIRECTORY || 'logs');
 if( !fs.existsSync(logDirectory) ) fs.mkdirSync(logDirectory);
 
+
 const morgan = require('./app/logger/morgan');
 const logger = require('./app/logger/winston');
 
 logger.info('Starting NodeJS App...');
 
 const express = require('express');
+
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT;
+
+// Setup helmet security
+app.use(helmet());
 
 // Parse JSON body and store result in req.body
 app.use(bodyParser.urlencoded({ extended: true }));
