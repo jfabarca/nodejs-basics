@@ -2,13 +2,14 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const rfs = require('rotating-file-stream');
+const config = require('../../config');
 
-let filename = process.env.MORGAN_FILENAME || 'access.log';
-let logDirectory = path.join(__dirname, `../../${process.env.LOGGER_DIRECTORY || 'logs'}`);
+let directory = config.logger.directory;
+let filename = config.logger.morgan.filename;
 
 let accessLogStream = rfs(filename, {
   interval: '1d',
-  path: logDirectory
+  path: path.join(__dirname, `../../${directory}`)
 });
 
-module.exports = morgan(process.env.MORGAN_LOGGER || 'common', { stream: accessLogStream });
+module.exports = morgan(config.logger.morgan.format, { stream: accessLogStream });

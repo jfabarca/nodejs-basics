@@ -1,15 +1,13 @@
+// Setup environment variables for local development
+require('dotenv').config();
+
 const fs = require('fs');
 const path = require('path');
-
-if(process.env.NODE_ENV !== 'production') {
-  // Setup environment variables for local development
-  require('dotenv').config();
-}
+const config = require('./config');
 
 // setup log directory
-let logDirectory = path.basename(process.env.LOGGER_DIRECTORY || 'logs');
+let logDirectory = path.basename(config.logger.directory);
 if( !fs.existsSync(logDirectory) ) fs.mkdirSync(logDirectory);
-
 
 const morgan = require('./app/logger/morgan');
 const logger = require('./app/logger/winston');
@@ -17,12 +15,10 @@ const logger = require('./app/logger/winston');
 logger.info('Starting NodeJS App...');
 
 const express = require('express');
-
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = process.env.PORT;
 
 // Setup helmet security
 app.use(helmet());
@@ -36,8 +32,7 @@ app.use(morgan);
 // Connect to database, then load API routes
 require('./app/')(app, () => {
   // Start server
-  app.listen(port, () => {
-    logger.info(`Listening on port ${port}.`);
-    logger.info(`***  NodeJS App is up and running! ***`);
+  app.listen(config.port, () => {
+    logger.info(`***  NodeJS App is up and running! Listening on port ${config.port}.***`);
   });
 });

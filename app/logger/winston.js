@@ -1,6 +1,7 @@
 const { format, transports } = require('winston');
 const { combine, timestamp, label, printf } = format;
 const winston = require('winston');
+const config = require('../../config');
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -8,16 +9,8 @@ const customFormat = printf(info => {
   return `${info.timestamp} [${info.label}] ${info.level.toUpperCase()}: ${info.message}`;
 });
 
-let defaultPath = 'logs';
-let defaultFilename = 'app.log';
-let defaultLevel = 'silly';
-
-let isPathDeclared = !!process.env.LOGGER_DIRECTORY;
-let isFilenameDeclared = !!process.env.LOGGER_FILENAME;
-let isLevelDeclared = !!process.env.LOGGER_LEVEL;
-
-const loggerPath = ( process.env.LOGGER_DIRECTORY || defaultPath ) +'/'+ ( process.env.LOGGER_FILENAME || defaultFilename );
-const loggerLevel = process.env.LOGGER_LEVEL || defaultLevel;
+const loggerPath = config.logger.directory +'/'+ config.logger.winston.filename;
+const loggerLevel = config.logger.winston.level;
 
 winston.configure({
   level: loggerLevel,
@@ -29,7 +22,7 @@ winston.configure({
   transports: [
     // Write all logs error (and below) to 'error.log'
     // new transports.File({ filename: 'app_error.log', level: 'error' }),
-    // Write to all logs to file path
+    // Write all logs to file path
     new transports.File({ filename: loggerPath }),
     new transports.Console({ format: combine( label({ label: 'console' }), timestamp(), customFormat ) })
   ],
@@ -38,15 +31,5 @@ winston.configure({
     new transports.Console({ format: combine( label({ label: 'console' }), timestamp(), customFormat ) })
   ]
 });
-
-if(!isPathDeclared) {
-  winston.info(`LOGGER_DIRECTORY env var not found, using default value "${defaultPath}" instead.`);
-}
-if(!isFilenameDeclared) {
-  winston.info(`LOGGER_FILENAME env var not found, using default value "${defaultFilename}" instead.`);
-}
-if(!isLevelDeclared) {
-  winston.info(`LOGGER_LEVEL env var not found, using default value "${defaultLevel}" instead.`);
-}
 
 module.exports = winston;
